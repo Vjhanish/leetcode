@@ -1,0 +1,52 @@
+char* predictPartyVictory(char* senate)
+{
+    int len = strlen(senate);
+    int r_active = 0;
+    int d_active = 0;
+    for (int i = 0; i < len; ++i)
+    {
+        if (senate[i] == 'R')++r_active;
+        else ++d_active;
+    }
+    
+    int r_vote = 0;
+    int d_vote = 0;
+    int pos = 0;
+    for (;;)
+    {
+        if (senate[pos] == 'R')
+        {
+            if (d_vote > 0)
+            {
+                --d_vote;
+                --r_active;
+                senate[pos] = 'x';
+            }
+            else
+            {
+                ++r_vote;
+            }
+
+        }
+        else if (senate[pos] == 'D')
+        {
+            if (r_vote > 0)
+            {
+                --r_vote;
+                --d_active;
+                senate[pos] = 'x';
+            }
+            else
+            {
+                ++d_vote;
+            }
+
+        }
+        if (r_active == 0) return (char*)"Dire";
+        else if (d_active == 0) return (char*)"Radiant";
+        pos = (pos + 1) % len;
+        
+    }
+
+    return NULL;
+}
