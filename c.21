@@ -1,0 +1,118 @@
+#define QUEUE_SIZE 10000
+
+typedef struct
+{
+    int front;
+    int rear;
+    int queue_size;
+    int * queue_arr;
+}queue;
+
+bool isQueueEmpty(queue * Queue)
+{
+    if(Queue->front == -1)
+        return true;
+    else
+        return false;
+}
+
+bool isQueueFull(queue * Queue)
+{
+    if(((Queue->rear + 1)%(Queue->queue_size)) == Queue->front)
+        return true;
+    else
+        return false;
+}
+
+void enQueue(queue * Queue, int val)
+{
+
+    if(isQueueFull(Queue))
+        return;
+
+    Queue->rear = (Queue->rear + 1)%(Queue->queue_size);
+    Queue->queue_arr[Queue->rear] = val;
+    if(Queue->front == -1)
+        Queue->front = 0;
+
+    return; 
+}
+
+int deQueue(queue * Queue)
+{
+    int ret_val = -1;
+    if(isQueueEmpty(Queue))
+        return ret_val;
+
+    ret_val = Queue->queue_arr[Queue->front];
+    if(Queue->front == Queue->rear)
+    {
+        Queue->front = -1;
+        Queue->rear = -1;
+    }
+    else
+    {
+        Queue->front = (Queue->front + 1)%(Queue->queue_size);
+    }
+    return ret_val;
+}
+
+int front(queue * Queue)
+{
+    int ret_val = -1;
+    if(isQueueEmpty(Queue))
+        return ret_val;
+
+    ret_val = Queue->queue_arr[Queue->front];
+    return ret_val;
+}
+
+typedef struct 
+{
+    queue Queue;    
+} RecentCounter;
+
+
+RecentCounter* recentCounterCreate() 
+{
+    RecentCounter * obj = (RecentCounter *)malloc(sizeof(RecentCounter));
+    obj->Queue.front = -1;
+    obj->Queue.rear = -1;
+    obj->Queue.queue_size = QUEUE_SIZE;
+    obj->Queue.queue_arr = (int *)malloc(sizeof(int) * obj->Queue.queue_size);
+
+    return obj;
+}
+
+int recentCounterPing(RecentCounter* obj, int t) 
+{
+    if(t <= 3000)
+    {
+        enQueue(&obj->Queue, t);
+        printf("t1 : %d\r\n", t);
+    }
+    else
+    {
+        while((isQueueEmpty(&obj->Queue) == false) &&  (t - front(&obj->Queue)) > 3000)
+        {
+            int dequeue_val = deQueue(&obj->Queue);
+        }
+        enQueue(&obj->Queue, t);
+    }
+    
+    return (obj->Queue.rear - obj->Queue.front + 1);
+}
+
+void recentCounterFree(RecentCounter* obj) 
+{
+    free(obj->Queue.queue_arr);
+    free(obj);
+}
+
+/**
+ * Your RecentCounter struct will be instantiated and called as such:
+ * RecentCounter* obj = recentCounterCreate();
+ * int param_1 = recentCounterPing(obj, t);
+ 
+ * recentCounterFree(obj);
+*/
