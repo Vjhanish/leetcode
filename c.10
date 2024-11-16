@@ -1,0 +1,37 @@
+int isVowel(char s) {
+    if ('a' == s || 'e' == s || 'i' == s || 'o' == s || 'u' == s) {
+        return true;
+    }
+    return false;
+}
+
+int max(const int a, const int b) {
+    return (a > b) ? a : b;
+}
+
+int maxVowels(char* s, int k) {
+    int sLength = strlen(s);
+    int maxVowels = 0;
+    int counter = 0;
+    int left = 0;
+
+    // Set up
+    for (int i = 0; i < k; i++)
+        if (isVowel(s[i]))
+            counter++;
+    maxVowels = counter;
+    // Displace window one-by-one
+    while (left < sLength - k) {
+        if (k == counter) // The max was already reached
+            break;
+        if (isVowel(s[left]))
+            counter--;
+        if (isVowel(s[left+k]))
+            counter++;
+        
+        maxVowels = max(maxVowels, counter);
+        left++;
+    }
+
+    return maxVowels;
+}
