@@ -1,0 +1,41 @@
+bool closeStrings(char* word1, char* word2) {
+    //for to count letter occurrences
+    int alphabet1[26] = {0}, n1=0;    
+    int alphabet2[26] = {0}, n2=0;
+    char char1[26], char2[26];
+    int index1 = 0, index2 = 0;
+
+    //count word1
+    while( word1[n1] != '\0' ){
+        if( alphabet1[ word1[n1] - 'a'] == 0){
+            char1[index1++] = word1[n1];
+        }
+        alphabet1[ word1[n1++] - 'a']++;
+    }
+
+    //count word2
+    while( word2[n2] != '\0' ){
+        if( alphabet2[ word2[n2] - 'a'] == 0){
+            char2[index2++] = word2[n2];
+        }
+        alphabet2[ word2[n2++] - 'a']++;
+    }
+
+    //check that have the same size and same diferent letters
+    if(n1 != n2 || index1 != index2) return false;
+
+    //For each letter in word1 we need to have some leters in word2 with the same occurrence
+    for(int i=0; i<index1; i++){
+        bool band = false;
+        if( alphabet2[ char1[i] - 'a'] == 0) return false;
+        for(int j=0; j<index2; j++){
+            if(alphabet1[ char1[i] - 'a'] == alphabet2[ char2[j] - 'a'] ){
+                band = true;
+                alphabet2[ char2[j] - 'a'] = -1;    //indicate that was it changed
+                break;
+            }
+        }
+        if(!band) return false;
+    }
+    return true;
+}   
