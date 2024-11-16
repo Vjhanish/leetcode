@@ -1,0 +1,28 @@
+int compare(const void* a, const void* b) {
+    return (*(int *)a - *(int *)b);
+}
+
+int maxOperations(int* nums, int numsSize, int k){
+    int count = 0;
+    int left = 0;
+    int right = numsSize - 1;
+    
+    qsort(nums, numsSize, sizeof(nums[0]), compare);
+
+    while (left < right) {
+        // Move both left and right
+        if (k == nums[left] + nums[right]) {
+            count++;
+            left++;
+            right--;
+            continue;
+        }
+        // Logic to move either left or right
+        else if (k > nums[left] + nums[right])
+            left++;
+        else if (k < nums[left] + nums[right])
+            right--;
+    }
+
+    return count;
+}
