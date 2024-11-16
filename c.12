@@ -1,0 +1,25 @@
+int longestSubarray(int* nums, int numsSize) {
+    int *sum_arr = calloc(numsSize,sizeof(int));
+    int sum = 0;
+    int zero_count = 0;
+    for(int i = 0; i < numsSize; i++){
+        if (nums[i]) {
+            sum += nums[i];
+        } else {
+            sum_arr[zero_count++] = sum;
+            sum = 0;
+        }
+    }
+    if (nums[numsSize-1]){
+        sum_arr[zero_count++] =sum;
+    }
+    if (sum_arr[0]){
+        sum = sum_arr[0] - 1;
+    }
+    for (int i = 0; i < zero_count-1; i++){
+        if (sum < (sum_arr[i] + sum_arr[i+1])){
+            sum = sum_arr[i] + sum_arr[i+1];
+        }
+    }
+    return sum; 
+}
