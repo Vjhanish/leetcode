@@ -1,0 +1,56 @@
+int max(const int a, const int b) {
+    return (a > b) ? a : b;
+}
+
+int longestOnes(int* nums, int numsSize, int k) {
+    int counter = 0;
+    int flipped = 0;
+    int maxConsecutive = 0;
+
+    // Set up
+    int i = 0;
+    while (i < numsSize) {
+        // If it's 1, then the sequence n is increased
+        if (1 == nums[i])
+            counter++;
+        else {
+            // The value 0 is reached, but values CANNOT be flipped!!!
+            if (k - flipped <= 0)
+                break;
+             // The value 0 is reached, but more values can be flipped!!!
+            flipped++;
+            counter++;
+        }
+        i++;
+    }
+    maxConsecutive = counter;
+
+    // Sliding window
+    i = 0;
+    while (i < numsSize - counter) {
+        printf("i: %-3dc: %-3d\n", i, counter);
+        if (0 == nums[i]) {
+            if (0 == nums[i + counter])
+                i++; // Do nothing, if both are zero, then just keep up
+            else
+                counter++; // If next is 1, just add it to the counter
+        }
+        else {
+            if (0 == nums[i + counter]) {   // If next one is zero
+                if (k - flipped > 0) {      // if we can still flip values, we flip it and add it
+                    flipped--;
+                    counter++;
+                }
+                else {
+                    i++;
+                    counter--;
+                }
+            }
+            else
+                counter++;
+        }
+        maxConsecutive = max(maxConsecutive, counter);
+    }
+
+    return maxConsecutive;
+}
