@@ -1,0 +1,38 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* productExceptSelf(int* nums, int numsSize, int* returnSize) {
+    int* answer = (int *)calloc(numsSize, sizeof(int));
+
+    // WHY DO I HAVE TO SET UP THIS
+    // ans: (me from 10 mins later) - char knows the ending with the null terminar,
+    //but there's no other way around the program can know the len of a int array
+    *returnSize = numsSize;
+
+    // Compute prefix
+    int i = 1;
+    while (i < numsSize) {
+        // Prefix product is gotten
+        // First value is equal to the last index value
+        if (0 == i - 1)
+            answer[i] = nums[i-1];
+        else
+            answer[i] = answer[i-1] * nums[i-1];
+        i++;
+    }
+
+    // Compute postfix
+    int accumulated_postfix = 1;
+    i = i - 2; // Start in the value before the last one, because the last one doesn't have a postfix
+    while (i >= 0) {
+        if (0 == i)
+            answer[i] = nums[i+1] * accumulated_postfix;
+        else
+            answer[i] = answer[i] * (nums[i+1] * accumulated_postfix);
+
+        accumulated_postfix *= nums[i+1];
+        i--;
+    }
+
+    return answer;
+}
